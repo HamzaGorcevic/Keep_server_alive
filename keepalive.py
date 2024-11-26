@@ -5,6 +5,7 @@ import requests
 app = Flask(__name__)
 
 def ping_service():
+    print("ping_service called!")
     try:
         response = requests.get("https://pyzzlebackend.onrender.com/game/alive")
         print(f"Pinged: Status {response.status_code}")
@@ -12,12 +13,14 @@ def ping_service():
         print(f"Error: {e}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=ping_service, trigger="interval", minutes=5)
+scheduler.add_job(func=ping_service, trigger="interval", seconds = 250)
 scheduler.start()
+print("Scheduler has started!")
 
 @app.route('/')
 def index():
     return "Keep-Alive Service is Running!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    print("Starting Flask app...")
+    app.run(host="0.0.0.0", port=5000, debug=True)
