@@ -1,42 +1,23 @@
-import argparse
-import os
-import threading
-import time
 from flask import Flask
+from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 
-# Flask server setup
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Keep-Alive Service is Running", 200
+def ping_service():
+    try:
+        response = requests.get("https://pyzzlebackend.onrender.com/game/alive")
+        print(f"Pinged: Status {response.status_code}")
+    except Exception as e:
+        print(f"Error: {e}")
 
-# Keep-Alive ping logic
-def keep_alive():
-    URL = "https://pyzzlebackend.onrender.com/game/alive" 
-    PING_INTERVAL = 300  # 5 minutes
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=ping_service, trigger="interval", minutes=5)
+scheduler.start()
 
-    while True:
-        try:
-            response = requests.get(URL)
-            print(f"Pinged {URL}: Status {response.status_code}")
-        except requests.RequestException as e:
-            print(f"Error pinging {URL}: {e}")
-        time.sleep(PING_INTERVAL)
+@app.route('/')
+def index():
+    return "Keep-Alive Service is Running!"
 
 if __name__ == "__main__":
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Keep-Alive Service")
-    parser.add_argument("address", nargs="?", default="0.0.0.0:5000", help="Address and port to bind to (e.g., 0.0.0.0:8000)")
-    args = parser.parse_args()
-
-    # Extract host and port from the address
-    address, port = args.address.split(":")
-    port = int(port)
-
-    # Start the keep-alive thread
-    threading.Thread(target=keep_alive, daemon=True).start()
-
-    # Run Flask server
-    app.run(host=address, port=port)
+    app.run(host="0.0.0.0", port=5000)
