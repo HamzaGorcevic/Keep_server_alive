@@ -7,13 +7,13 @@ app = Flask(__name__)
 def ping_service():
     print("ping_service called!")
     try:
-        response = requests.get("https://pyzzlebackend.onrender.com/game/alive")
+        response = requests.get("https://pyzzlebackend1.onrender.com/game/alive")
         print(f"Pinged: Status {response.status_code}")
     except Exception as e:
         print(f"Error: {e}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=ping_service, trigger="interval", seconds = 10)
+scheduler.add_job(func=ping_service, trigger="interval", seconds = 200)
 scheduler.start()
 print("Scheduler has started!")
 
