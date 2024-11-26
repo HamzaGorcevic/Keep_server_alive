@@ -2,7 +2,7 @@ import time
 import requests
 
 URL = "https://pyzzlebackend.onrender.com/game/alive" 
-PING_INTERVAL = 30
+PING_INTERVAL = 200
 
 def ping_service():
     try:
