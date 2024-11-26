@@ -13,7 +13,7 @@ def ping_service():
         print(f"Error: {e}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=ping_service, trigger="interval", seconds = 250)
+scheduler.add_job(func=ping_service, trigger="interval", seconds = 10)
 scheduler.start()
 print("Scheduler has started!")
 
